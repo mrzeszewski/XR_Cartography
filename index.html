@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>VR prezentacja</title>
+  <style>
+    html, body, canvas {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+<canvas id="renderCanvas"></canvas>
+
+<script src="https://cdn.babylonjs.com/babylon.js"></script>
+<script src="https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.js"></script>
+
+<script>
+const canvas = document.getElementById("renderCanvas");
+const engine = new BABYLON.Engine(canvas, true);
+engine.setHardwareScalingLevel(2);
+
+
+async function createScene() {
+  const scene = new BABYLON.Scene(engine);
+  scene.collisionsEnabled = true;
+
+  scene.clearColor = new BABYLON.Color4(0.53, 0.81, 0.92, 1);
+
+  const camera = new BABYLON.UniversalCamera(
+    "camera",
+    new BABYLON.Vector3(-138.41093311415116, 1.7, -78.19516893057913),
+    scene
+  );
+
+  window.camera = camera;
+
+  camera.attachControl(canvas, true);
+  camera.applyGravity = true;
+  camera.checkCollisions = false;
+  camera.ellipsoid = new BABYLON.Vector3(0.35, 0.85, 0.35);
+
+  camera.speed = 0.15;
+  camera.angularSensibility = 3000;
+
+  camera.keysUp = [87, 38];     // W, ArrowUp
+  camera.keysDown = [83, 40];   // S, ArrowDown
+  camera.keysLeft = [65, 37];   // A, ArrowLeft
+  camera.keysRight = [68, 39];  // D, ArrowRight
+
+  canvas.addEventListener("click", () => {
+  canvas.requestPointerLock();
+});
+
+  const light = new BABYLON.HemisphericLight(
+    "light",
+    new BABYLON.Vector3(0, 1, 0),
+    scene
+  );
+
+  light.intensity = 1.2;
+
+  const result = await BABYLON.SceneLoader.ImportMeshAsync(
+    "",
+    "./models/",
+    "scandinavian_house.glb",
+    scene
+  );
+
+  const houseMeshes = result.meshes.filter(m => m.getTotalVertices && m.getTotalVertices() > 0);
+
+  houseMeshes.forEach(mesh => {
+    mesh.checkCollisions = false;
+    mesh.isPickable = true;
+  });
+
+  houseMeshes.forEach(mesh => {
+  const name = mesh.name.toLowerCase();
+
+  if (
+    name.includes("floor") ||
+    name.includes("ground") ||
+    name.includes("terrain")
+  ) {
+    mesh.checkCollisions = true;
+  }
+});
+
+  // IMPORTANT:
+  // Replace "Floor" with the actual mesh name of your floor if needed.
+  // If unsure, open DevTools and check the console output below.
+  console.log("Meshes:", houseMeshes.map(m => m.name));
+
+  const teleportMeshes = houseMeshes.filter(mesh =>
+    mesh.name.toLowerCase().includes("floor") ||
+    mesh.name.toLowerCase().includes("ground") ||
+    mesh.name.toLowerCase().includes("terrain")
+  );
+
+  const xr = await scene.createDefaultXRExperienceAsync({
+    floorMeshes: teleportMeshes.length ? teleportMeshes : houseMeshes,
+    optionalFeatures: true
+  });
+
+  return scene;
+}
+
+createScene().then(scene => {
+  engine.runRenderLoop(() => scene.render());
+});
+
+window.addEventListener("resize", () => engine.resize());
+</script>
+</body>
+</html>
