@@ -21,7 +21,7 @@
 <script>
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
-engine.setHardwareScalingLevel(2); //MRZ: Jakość renderowanie - i mniej tym wyższa
+engine.setHardwareScalingLevel(2); //MRZ: Jakość renderowania - i mniej tym wyższa
 
 
 async function createScene() {
@@ -32,7 +32,7 @@ async function createScene() {
 
   const camera = new BABYLON.UniversalCamera(
     "camera",
-    new BABYLON.Vector3(-138.41093311415116, 1.7, -78.19516893057913),
+    new BABYLON.Vector3(-138.41093311415116, 1.7, -78.19516893057913), //MRZ: Współrzędne startowe kamery - można sprawdzić na scenie w konsoli poprzez: camera.position
     scene
   );
 
@@ -40,10 +40,10 @@ async function createScene() {
 
   camera.attachControl(canvas, true);
   camera.applyGravity = true;
-  camera.checkCollisions = false;
+  camera.checkCollisions = false; //MRZ: kolizje z obiektami - kamera
   camera.ellipsoid = new BABYLON.Vector3(0.35, 0.85, 0.35);
 
-  camera.speed = 0.15;
+  camera.speed = 0.15; //MRZ: szybkość kamery - trzeba dostosować do wielkości modelu
   camera.angularSensibility = 3000;
 
   camera.keysUp = [87, 38];     // W, ArrowUp
@@ -65,16 +65,16 @@ async function createScene() {
 
   const result = await BABYLON.SceneLoader.ImportMeshAsync(
     "",
-    "./models/",
+    "./models/", //MRZ: Katalog z modelami
     //"scandinavian_house.glb",
-    "wydzial_propozycja1.glb",
+    "wydzial_propozycja1.glb", //MRZ: Nazwa modelu
     scene
   );
 
   const houseMeshes = result.meshes.filter(m => m.getTotalVertices && m.getTotalVertices() > 0);
 
   houseMeshes.forEach(mesh => {
-    mesh.checkCollisions = false;
+    mesh.checkCollisions = false; //MRZ: Kolizje z obiektami - wyłączone w celu optymalizacji
     mesh.isPickable = true;
   });
 
@@ -86,7 +86,7 @@ async function createScene() {
     name.includes("ground") ||
     name.includes("terrain")
   ) {
-    mesh.checkCollisions = true;
+    mesh.checkCollisions = true; 
   }
 });
 
