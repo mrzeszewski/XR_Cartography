@@ -21,14 +21,14 @@
 <script>
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
-engine.setHardwareScalingLevel(2);
+engine.setHardwareScalingLevel(2); //MRZ: Jakość renderowanie - i mniej tym wyższa
 
 
 async function createScene() {
   const scene = new BABYLON.Scene(engine);
   scene.collisionsEnabled = true;
 
-  scene.clearColor = new BABYLON.Color4(0.53, 0.81, 0.92, 1);
+  scene.clearColor = new BABYLON.Color4(0.53, 0.81, 0.92, 1); //MRZ: Kolor tła
 
   const camera = new BABYLON.UniversalCamera(
     "camera",
