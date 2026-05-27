@@ -21,7 +21,7 @@
 <script>
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
-engine.setHardwareScalingLevel(2); //MRZ: Jakość renderowania - i mniej tym wyższa
+engine.setHardwareScalingLevel(1); //MRZ: Jakość renderowania - i mniej tym wyższa - jeśli gogle nie radzą sobie z modelem można obniżyć do np. 1.5 lub 2
 
 
 async function createScene() {
@@ -43,7 +43,7 @@ async function createScene() {
   camera.checkCollisions = false; //MRZ: kolizje z obiektami - kamera
   camera.ellipsoid = new BABYLON.Vector3(0.35, 0.85, 0.35);
 
-  camera.speed = 0.15; //MRZ: szybkość kamery - trzeba dostosować do wielkości modelu
+  camera.speed = 0.5; //MRZ: szybkość kamery - trzeba dostosować do wielkości modelu
   camera.angularSensibility = 3000;
 
   camera.keysUp = [87, 38];     // W, ArrowUp
